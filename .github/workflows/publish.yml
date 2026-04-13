@@ -20,55 +20,41 @@ jobs:
           token: ${{ secrets.PUBLISH_TOKEN }}
           path: public
 
-      - name: Generate index.md and categories
+      - name: Generate index.md and categories.md
         run: |
           echo "# 我的笔记索引" > index.md
           echo "" >> index.md
+          echo "## 分类" >> index.md
+          echo "- [分类目录](./categories.md)" >> index.md
 
-          mkdir -p categories
+          echo "# 分类目录" > categories.md
+          echo "" >> categories.md
 
           declare -A category_map
 
           for file in *.md */*.md; do
-            if [ "$file" != "index.md" ]; then
-              # 读取 category
+            if [ "$file" != "index.md" ] && [ "$file" != "categories.md" ]; then
               category=$(grep -m1 "^category:" "$file" | sed 's/category:[ ]*//')
               if [ -z "$category" ]; then
                 category="未分类"
               fi
-
-              # 添加到分类映射
               category_map["$category"]+="$file "
             fi
           done
 
-          # 生成分类首页
-          echo "# 分类目录" > categories.md
-          echo "" >> categories.md
-
           for cat in "${!category_map[@]}"; do
-            safe_cat=$(echo "$cat" | sed 's/ /_/g')
-            echo "- [$cat](categories/$safe_cat.md)" >> categories.md
-
-            # 生成每个分类页面
-            echo "# 分类：$cat" > "categories/$safe_cat.md"
-            echo "" >> "categories/$safe_cat.md"
-
+            echo "## $cat" >> categories.md
+            echo "" >> categories.md
             for f in ${category_map[$cat]}; do
-              echo "- [$f](../$f)" >> "categories/$safe_cat.md"
+              echo "- [$f](./$f)" >> categories.md
             done
+            echo "" >> categories.md
           done
-
-          # 首页加入分类入口
-          echo "" >> index.md
-          echo "## 分类" >> index.md
-          echo "- [分类目录](./categories.md)" >> index.md
 
       - name: Sync markdown files
         run: |
           rm -rf public/*
           cp -r *.md public/ || true
-          cp -r categories public/ || true
           cp -r */ public/ || true
           rm -rf public/public
 
@@ -78,5 +64,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "Auto sync + auto index + auto categories (force rebuild)" --allow-empty
+          git commit -m "Auto sync + auto index + auto categories (no structure change)" --allow-empty
           git push
