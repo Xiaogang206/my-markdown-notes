@@ -1,0 +1,48 @@
+# ============================
+# Obsidian Vault Ignore Rules
+# ============================
+
+# 忽略整个 .obsidian 文件夹（插件、配置、密钥）
+.obsidian/
+
+# 如果你只想同步部分配置，可以手动取消注释下面几行：
+# .obsidian/workspace.json
+# .obsidian/app.json
+# .obsidian/themes/
+
+# ============================
+# macOS 系统文件
+# ============================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# ============================
+# iCloud 同步缓存
+# ============================
+*.icloud
+
+# ============================
+# 临时文件 / 缓存
+# ============================
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ============================
+# Node / 工具缓存（如果你用过插件）
+# ============================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================
+# 图片上传插件（避免密钥泄露）
+# ============================
+.obsidian/plugins/image-upload-toolkit/
+.obsidian/plugins/obsidian-image-uploader/
+.obsidian/plugins/obsidian-aliyun-oss/
+
