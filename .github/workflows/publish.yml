@@ -26,11 +26,11 @@ jobs:
           cp -r *.md public/ || true
           cp -r */ public/ || true
 
-      - name: Commit and push changes
+      - name: Commit and push changes (force rebuild)
         run: |
           cd public
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "Auto sync from private repo" || true
+          git commit -m "Auto sync from private repo (force rebuild)" --allow-empty
           git push
