@@ -64,7 +64,7 @@ jobs:
           done
           echo "]" >> search.json
 
-cat << 'EOF' > search.md
+          cat << 'EOF' > search.md
 # 全文搜索
 
 <input id="searchBox" placeholder="输入关键词搜索..." />
