@@ -25,6 +25,7 @@ jobs:
           rm -rf public/*
           cp -r *.md public/ || true
           cp -r */ public/ || true
+          rm -rf public/public  # ✅ 防止嵌套 public 文件夹
 
       - name: Commit and push changes (force rebuild)
         run: |
