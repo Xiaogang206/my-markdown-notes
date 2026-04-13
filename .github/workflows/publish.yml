@@ -1,0 +1,31 @@
+name: Publish Markdown to Public Pages Repo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout private repo
+        uses: actions/checkout@v3
+
+      - name: Clone public pages repo
+        run: |
+          git clone https://github.com/${{ github.repository_owner }}/my-markdown-site.git public-site
+
+      - name: Sync markdown files
+        run: |
+          rsync -av --delete --include="*/" --include="*.md" --exclude="*" ./ public-site/
+
+      - name: Commit and push changes
+        run: |
+          cd public-site
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Auto publish from private repo" || echo "No changes to commit"
+          git push
