@@ -1,3 +1,25 @@
+name: Sync to Public Pages Repo
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout private repo
+        uses: actions/checkout@v4
+
+      - name: Checkout public repo
+        uses: actions/checkout@v4
+        with:
+          repository: Xiaogang206/gang
+          token: ${{ secrets.PUBLISH_TOKEN }}
+          path: public
+
       - name: Generate index, categories, search, timeline
         run: |
           echo "# 我的笔记索引" > index.md
@@ -95,3 +117,19 @@ EOF
             fi
             echo "- [$file](./$file)" >> timeline.md
           done
+
+      - name: Sync markdown files
+        run: |
+          rm -rf public/*
+          cp -r *.md public/ || true
+          cp -r */ public/ || true
+          rm -rf public/public
+
+      - name: Commit and push changes (force rebuild)
+        run: |
+          cd public
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Auto sync + index + categories + search + timeline" --allow-empty
+          git push
