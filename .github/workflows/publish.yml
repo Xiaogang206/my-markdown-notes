@@ -62,7 +62,6 @@ jobs:
               $first || echo "," >> search.json
               first=false
               echo "{\"title\":\"$title\",\"path\":\"./$file\",\"content\":\"$content\"}" >> search.json
-
             fi
           done
           echo "]" >> search.json
