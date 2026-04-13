@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "cfb9ee417380aa3e",
+        "id": "0c034e0e1b81b5f6",
         "type": "tabs",
         "children": [
           {
-            "id": "fda7a7236d68e16b",
+            "id": "ea039c3998504fa3",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -186,8 +186,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "25d97109be2567f5",
+  "active": "ea039c3998504fa3",
   "lastOpenFiles": [
+    "publish测试.md",
+    "_config.yml",
     "ssh-keygen -t ed25519 -C \"你的GitHub邮箱\".pub",
     "ssh-keygen -t ed25519 -C \"你的GitHub邮箱\"",
     "圆桌讨论prompt.md",
@@ -219,11 +221,8 @@
     "话题/社会关系",
     "播客/罗永浩vs何小鹏/自动驾驶与AI的深度结合.md",
     "播客/老范讲故事/普通黑客发动攻击 & Mythos “攻击工业化”.md",
-    "播客/老范讲故事/浏览器.md",
     "播客/中国生物医药的2026：BD退潮与研发布局新篇章",
     "播客/罗永浩vs何小鹏",
-    "王志安/其他",
-    "话题/智能驾驶FSD",
     "社科类/历史/民族国家演进逻辑图.canvas",
     "education_deepest_layer.svg",
     "education_framework_round1 (1).svg",
