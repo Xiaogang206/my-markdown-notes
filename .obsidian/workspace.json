@@ -4,67 +4,20 @@
     "type": "split",
     "children": [
       {
-        "id": "ffcf7341bf555974",
+        "id": "cfb9ee417380aa3e",
         "type": "tabs",
         "children": [
           {
-            "id": "693712336711537f",
+            "id": "fda7a7236d68e16b",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "人物/潘石屹/潘石屹2012： 企业风险管理与稳健发展之道.md",
-                "mode": "preview",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "潘石屹2012： 企业风险管理与稳健发展之道"
-            }
-          },
-          {
-            "id": "39292281171f1ea6",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "人物/潘石屹/是否会因为保守而错过很多机会.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "是否会因为保守而错过很多机会"
-            }
-          },
-          {
-            "id": "6ab939c10859633a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "生活/履职评价方案Copilot.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "履职评价方案Copilot"
-            }
-          },
-          {
-            "id": "3853f90dfd4a09bd",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "播客/老范讲故事/浏览器比OS更复杂.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "浏览器比OS更复杂"
+              "title": "新标签页"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -233,7 +186,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3853f90dfd4a09bd",
+  "active": "25d97109be2567f5",
   "lastOpenFiles": [
     "ssh-keygen -t ed25519 -C \"你的GitHub邮箱\".pub",
     "ssh-keygen -t ed25519 -C \"你的GitHub邮箱\"",
