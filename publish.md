@@ -1,0 +1,131 @@
+name: Sync to Public Pages Repo
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout private repo
+        uses: actions/checkout@v4
+    
+      - name: Checkout public repo
+        uses: actions/checkout@v4
+        with:
+          repository: Xiaogang206/gang
+          token: ${{ secrets.PUBLISH_TOKEN }}
+          path: public
+    
+      - name: Generate index, categories, search, timeline
+        run: |
+          echo "# 我的笔记索引" > index.md
+          echo "" >> index.md
+          echo "## 分类" >> index.md
+          echo "- [分类目录](./categories.md)" >> index.md
+          echo "- [全文搜索](./search.md)" >> index.md
+          echo "- [时间线](./timeline.md)" >> index.md
+    
+          echo "# 分类目录" > categories.md
+          echo "" >> categories.md
+          declare -A category_map
+    
+          for file in *.md */*.md; do
+            if [[ "$file" != "index.md" && "$file" != "categories.md" && "$file" != "search.md" && "$file" != "timeline.md" ]]; then
+              category=$(grep -m1 "^category:" "$file" | sed 's/category:[ ]*//')
+              [ -z "$category" ] && category="未分类"
+              category_map["$category"]+="$file "
+            fi
+          done
+    
+          for cat in "${!category_map[@]}"; do
+            echo "## $cat" >> categories.md
+            echo "" >> categories.md
+            for f in ${category_map[$cat]}; do
+              echo "- [$f](./$f)" >> categories.md
+            done
+            echo "" >> categories.md
+          done
+    
+          echo "[" > search.json
+          first=true
+          for file in *.md */*.md; do
+            if [[ "$file" != "index.md" && "$file" != "categories.md" && "$file" != "search.md" && "$file" != "timeline.md" ]]; then
+              content=$(sed ':a;N;$!ba;s/\n/ /g' "$file")
+              title=$(grep -m1 "^title:" "$file" | sed 's/title:[ ]*//')
+              [ -z "$title" ] && title="$file"
+              $first || echo "," >> search.json
+              first=false
+              echo "{\"title\":\"$title\",\"path\":\"./$file\",\"content\":\"$content\"}" >> search.json
+            fi
+          done
+          echo "]" >> search.json
+    
+          cat << 'EOF' > search.md
+# 全文搜索
+
+<input id="searchBox" placeholder="输入关键词搜索..." />
+
+<ul id="results"></ul>
+
+<script>
+fetch('./search.json')
+  .then(r => r.json())
+  .then(data => {
+    const box = document.getElementById('searchBox')
+    const results = document.getElementById('results')
+
+    box.addEventListener('input', () => {
+      const q = box.value.trim()
+      results.innerHTML = ''
+      if (!q) return
+    
+      const matched = data.filter(item =>
+        item.content.includes(q) ||
+        item.title.includes(q)
+      )
+    
+      matched.forEach(item => {
+        const li = document.createElement('li')
+        li.innerHTML = `<a href="${item.path}">${item.title}</a>`
+        results.appendChild(li)
+      })
+    })
+  })
+</script>
+EOF
+
+          echo "# 时间线" > timeline.md
+          echo "" >> timeline.md
+    
+          git log --pretty=format:"%ad %H" --date=short -- *.md */*.md | while read date hash; do
+            file=$(git diff-tree --no-commit-id --name-only -r $hash | head -n 1)
+            echo "$date $file" >> timeline_raw.txt
+          done
+    
+          sort -r timeline_raw.txt | while read date file; do
+            if [ "$current" != "$date" ]; then
+              current="$date"
+              echo "## $date" >> timeline.md
+            fi
+            echo "- [$file](./$file)" >> timeline.md
+          done
+    
+      - name: Sync markdown files
+        run: |
+          rm -rf public/*
+          cp -r *.md public/ || true
+          cp -r */ public/ || true
+          rm -rf public/public
+    
+      - name: Commit and push changes (force rebuild)
+        run: |
+          cd public
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Auto sync + index + categories + search + timeline" --allow-empty
+          git push
