@@ -8,10 +8,11 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout private repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 必须为 0 才能获取全量 git log 生成时间线
 
       - name: Checkout public repo
         uses: actions/checkout@v4
@@ -20,118 +21,38 @@ jobs:
           token: ${{ secrets.PUBLISH_TOKEN }}
           path: public
 
-      - name: Generate index, categories, search, timeline
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Build Assets
         run: |
-          echo "# 我的笔记索引" > index.md
-          echo "" >> index.md
-          echo "## 分类" >> index.md
-          echo "- [分类目录](./categories.md)" >> index.md
-          echo "- [全文搜索](./search.md)" >> index.md
-          echo "- [时间线](./timeline.md)" >> index.md
-
-          echo "# 分类目录" > categories.md
-          echo "" >> categories.md
-          declare -A category_map
-
-          for file in *.md */*.md; do
-            if [[ "$file" != "index.md" && "$file" != "categories.md" && "$file" != "search.md" && "$file" != "timeline.md" && -f "$file" ]]; then
-              category=$(grep -m1 "^category:" "$file" | sed 's/category:[ ]*//')
-              [ -z "$category" ] && category="未分类"
-              category_map["$category"]+="$file "
-            fi
-          done
-
-          for cat in "${!category_map[@]}"; do
-            echo "## $cat" >> categories.md
-            echo "" >> categories.md
-            for f in ${category_map[$cat]}; do
-              echo "- [$f](./$f)" >> categories.md
-            done
-            echo "" >> categories.md
-          done
-
-          echo "[" > search.json
-          first=true
-          for file in *.md */*.md; do
-            if [[ "$file" != "index.md" && "$file" != "categories.md" && "$file" != "search.md" && "$file" != "timeline.md" && -f "$file" ]]; then
-              # 处理内容中的双引号和换行，避免 JSON 格式失效
-              content=$(sed ':a;N;$!ba;s/\n/ /g' "$file" | sed 's/"/\\"/g')
-              title=$(grep -m1 "^title:" "$file" | sed 's/title:[ ]*//')
-              [ -z "$title" ] && title="$file"
-              $first || echo "," >> search.json
-              first=false
-              echo "{\"title\":\"$title\",\"path\":\"./$file\",\"content\":\"$content\"}" >> search.json
-            fi
-          done
-          echo "]" >> search.json
-
-          # 注意：以下所有行都必须保持缩进！
+          # 执行 Python 脚本生成索引和分类
+          python build_assets.py
+          
+          # 快速生成简单的 search.md (不再内嵌 JS，保持文件纯净)
           cat << 'EOF' > search.md
           # 全文搜索
-
-          <input id="searchBox" placeholder="输入关键词搜索..." />
-
+          <input id="searchBox" placeholder="输入关键词搜索..." style="width:100%;padding:8px">
           <ul id="results"></ul>
-
-          <script>
-          fetch('./search.json')
-            .then(r => r.json())
-            .then(data => {
-              const box = document.getElementById('searchBox')
-              const results = document.getElementById('results')
-
-              box.addEventListener('input', () => {
-                const q = box.value.trim()
-                results.innerHTML = ''
-                if (!q) return
-
-                const matched = data.filter(item =>
-                  item.content.includes(q) ||
-                  item.title.includes(q)
-                )
-
-                matched.forEach(item => {
-                  const li = document.createElement('li')
-                  li.innerHTML = `<a href="${item.path}">${item.title}</a>`
-                  results.appendChild(li)
-                })
-              })
-            })
-          </script>
+          <script src="./search_logic.js"></script>
           EOF
 
-          echo "# 时间线" > timeline.md
-          echo "" >> timeline.md
-
-          git log --pretty=format:"%ad %H" --date=short -- *.md */*.md | while read date hash; do
-            file=$(git diff-tree --no-commit-id --name-only -r $hash | head -n 1)
-            if [ -f "$file" ]; then
-              echo "$date $file" >> timeline_raw.txt
-            fi
-          done
-
-          if [ -f timeline_raw.txt ]; then
-            sort -r timeline_raw.txt | while read date file; do
-              if [ "$current" != "$date" ]; then
-                current="$date"
-                echo "## $date" >> timeline.md
-              fi
-              echo "- [$file](./$file)" >> timeline.md
-            done
-          fi
-
-      - name: Sync markdown files
+      - name: Sync Files
         run: |
-          rm -rf public/*
-          # 使用 --parents 可以保持子目录结构
-          cp -r *.md public/ || true
-          find . -maxdepth 1 -type d ! -name "public" ! -name "." ! -name ".git" ! -name ".github" -exec cp -r {} public/ \; || true
+          # 清理旧文件并同步新文件
+          mkdir -p public
+          find . -maxdepth 1 -name "*.md" -exec cp {} public/ \;
+          find . -maxdepth 1 -name "*.json" -exec cp {} public/ \;
+          # 如果你有其他 JS 或静态资源
+          cp -r assets/* public/ 2>/dev/null || true
 
-      - name: Commit and push changes (force rebuild)
+      - name: Commit and Push
         run: |
           cd public
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "Auto sync + index + categories + search + timeline" --allow-empty
+          git commit -m "Site Update: $(date +'%Y-%m-%d %H:%M')" --allow-empty
           git push
