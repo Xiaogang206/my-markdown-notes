@@ -1,4 +1,4 @@
-name: Publish Markdown to Public Pages Repo
+name: Sync to Public Pages Repo
 
 on:
   push:
@@ -6,26 +6,31 @@ on:
       - main
 
 jobs:
-  publish:
+  sync:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout private repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Clone public pages repo
-        run: |
-          git clone https://github.com/${{ github.repository_owner }}/my-markdown-site.git public-site
+      - name: Checkout public repo
+        uses: actions/checkout@v4
+        with:
+          repository: Xiaogang206/gang
+          token: ${{ secrets.PUBLISH_TOKEN }}
+          path: public
 
       - name: Sync markdown files
         run: |
-          rsync -av --delete --include="*/" --include="*.md" --exclude="*" ./ public-site/
+          rm -rf public/*
+          cp -r *.md public/ || true
+          cp -r */ public/ || true
 
       - name: Commit and push changes
         run: |
-          cd public-site
+          cd public
           git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.email "actions@github.com"
           git add .
-          git commit -m "Auto publish from private repo" || echo "No changes to commit"
+          git commit -m "Auto sync from private repo" || true
           git push
