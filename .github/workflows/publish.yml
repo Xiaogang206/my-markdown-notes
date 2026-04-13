@@ -67,7 +67,8 @@ jobs:
           echo "]" >> search.json
 
           # 搜索页面
-          cat << 'EOF' > search.md
+          
+cat << 'EOF' > search.md
 # 全文搜索
 
 <input id="searchBox" placeholder="输入关键词搜索..." />
@@ -100,6 +101,7 @@ fetch('./search.json')
   })
 </script>
 EOF
+
 
           # 时间线
           echo "# 时间线" > timeline.md
