@@ -1,0 +1,16 @@
+{
+	"nodes":[
+		{"id":"6b49c149ad712cd3","x":200,"y":-1280,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/惩罚&道德成长.md"},
+		{"id":"ce183d367dcd8a23","x":600,"y":-1280,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/道德困境.md"},
+		{"id":"73e2046b4ac37c7d","x":1000,"y":-1280,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/独立思考.md"},
+		{"id":"9660335652352563","x":-200,"y":-400,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/行为主义.md"},
+		{"id":"ecf4bea3dd22a76a","x":200,"y":-400,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/原生家庭.md"},
+		{"id":"820d6604ab08e2c2","x":600,"y":-400,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/有条件养育.md"},
+		{"id":"e5bb18f685f8fc05","x":-200,"y":-840,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/安全感.md"},
+		{"id":"e9e99f6546bd0aad","x":200,"y":-840,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/假我.md"},
+		{"id":"69811e0ee46fec6d","x":600,"y":-840,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/内在动机.md"},
+		{"id":"17b89d283a26f1c6","x":1000,"y":-840,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/伪抉择.md"},
+		{"id":"3a7749d232c88ebe","x":-200,"y":-1280,"width":400,"height":400,"type":"file","file":"书籍/《无条件养育》/爱的撤回.md"}
+	],
+	"edges":[]
+}

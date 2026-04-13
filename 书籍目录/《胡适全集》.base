@@ -1,0 +1,16 @@
+views:
+  - type: table
+    name: 表格
+    filters:
+      and:
+        - file.folder == "书籍/《胡适全集》"
+    order:
+      - file.name
+      - file.ctime
+      - file.mtime
+      - file.tags
+    sort: []
+    remote_cover: https://obsidian9926.oss-cn-hongkong.aliyuncs.com/img/20260213220118454.png
+    markers: bullet
+    indentProperties: false
+    separator: ", "
