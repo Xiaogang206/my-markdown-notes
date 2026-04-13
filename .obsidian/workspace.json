@@ -229,11 +229,13 @@
       "file-cleaner-redux:Clean files": false,
       "obsidian-book-search-plugin:Create new book note": false,
       "print:Print note": false,
-      "mermaid-tools:Open Mermaid Toolbar": false
+      "mermaid-tools:Open Mermaid Toolbar": false,
+      "obsidian-git:Open Git source control": false
     }
   },
   "active": "3853f90dfd4a09bd",
   "lastOpenFiles": [
+    "圆桌讨论prompt.md",
     "全部笔记.base",
     "生活/牛奶纸盒里加铝箔的原因.md",
     "生活/履职评价方案Copilot.md",
