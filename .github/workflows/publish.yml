@@ -57,11 +57,12 @@ jobs:
           for file in *.md */*.md; do
             if [[ "$file" != "index.md" && "$file" != "categories.md" && "$file" != "search.md" && "$file" != "timeline.md" ]]; then
               content=$(sed ':a;N;$!ba;s/\n/ /g' "$file")
-              title=$(grep -m1 "^title:" "$file" | sed 's/title:[ ]*//')
+              title=$(grep -m1 "^title:" "$file" | sed 's/^title: //')
               [ -z "$title" ] && title="$file"
               $first || echo "," >> search.json
               first=false
               echo "{\"title\":\"$title\",\"path\":\"./$file\",\"content\":\"$content\"}" >> search.json
+
             fi
           done
           echo "]" >> search.json
