@@ -34,7 +34,7 @@ jobs:
           declare -A category_map
 
           for file in *.md */*.md; do
-            if [[ "$file" != "index.md" && "$file" != "categories.md" && "$file" != "search.md" && "$file" != "timeline.md" ]]; then
+            if [[ "$file" != "index.md" && "$file" != "categories.md" && "$file" != "search.md" && "$file" != "timeline.md" && -f "$file" ]]; then
               category=$(grep -m1 "^category:" "$file" | sed 's/category:[ ]*//')
               [ -z "$category" ] && category="未分类"
               category_map["$category"]+="$file "
@@ -53,8 +53,9 @@ jobs:
           echo "[" > search.json
           first=true
           for file in *.md */*.md; do
-            if [[ "$file" != "index.md" && "$file" != "categories.md" && "$file" != "search.md" && "$file" != "timeline.md" ]]; then
-              content=$(sed ':a;N;$!ba;s/\n/ /g' "$file")
+            if [[ "$file" != "index.md" && "$file" != "categories.md" && "$file" != "search.md" && "$file" != "timeline.md" && -f "$file" ]]; then
+              # 处理内容中的双引号和换行，避免 JSON 格式失效
+              content=$(sed ':a;N;$!ba;s/\n/ /g' "$file" | sed 's/"/\\"/g')
               title=$(grep -m1 "^title:" "$file" | sed 's/title:[ ]*//')
               [ -z "$title" ] && title="$file"
               $first || echo "," >> search.json
@@ -64,62 +65,67 @@ jobs:
           done
           echo "]" >> search.json
 
+          # 注意：以下所有行都必须保持缩进！
           cat << 'EOF' > search.md
-# 全文搜索
+          # 全文搜索
 
-<input id="searchBox" placeholder="输入关键词搜索..." />
+          <input id="searchBox" placeholder="输入关键词搜索..." />
 
-<ul id="results"></ul>
+          <ul id="results"></ul>
 
-<script>
-fetch('./search.json')
-  .then(r => r.json())
-  .then(data => {
-    const box = document.getElementById('searchBox')
-    const results = document.getElementById('results')
+          <script>
+          fetch('./search.json')
+            .then(r => r.json())
+            .then(data => {
+              const box = document.getElementById('searchBox')
+              const results = document.getElementById('results')
 
-    box.addEventListener('input', () => {
-      const q = box.value.trim()
-      results.innerHTML = ''
-      if (!q) return
+              box.addEventListener('input', () => {
+                const q = box.value.trim()
+                results.innerHTML = ''
+                if (!q) return
 
-      const matched = data.filter(item =>
-        item.content.includes(q) ||
-        item.title.includes(q)
-      )
+                const matched = data.filter(item =>
+                  item.content.includes(q) ||
+                  item.title.includes(q)
+                )
 
-      matched.forEach(item => {
-        const li = document.createElement('li')
-        li.innerHTML = `<a href="${item.path}">${item.title}</a>`
-        results.appendChild(li)
-      })
-    })
-  })
-</script>
-EOF
+                matched.forEach(item => {
+                  const li = document.createElement('li')
+                  li.innerHTML = `<a href="${item.path}">${item.title}</a>`
+                  results.appendChild(li)
+                })
+              })
+            })
+          </script>
+          EOF
 
           echo "# 时间线" > timeline.md
           echo "" >> timeline.md
 
           git log --pretty=format:"%ad %H" --date=short -- *.md */*.md | while read date hash; do
             file=$(git diff-tree --no-commit-id --name-only -r $hash | head -n 1)
-            echo "$date $file" >> timeline_raw.txt
+            if [ -f "$file" ]; then
+              echo "$date $file" >> timeline_raw.txt
+            fi
           done
 
-          sort -r timeline_raw.txt | while read date file; do
-            if [ "$current" != "$date" ]; then
-              current="$date"
-              echo "## $date" >> timeline.md
-            fi
-            echo "- [$file](./$file)" >> timeline.md
-          done
+          if [ -f timeline_raw.txt ]; then
+            sort -r timeline_raw.txt | while read date file; do
+              if [ "$current" != "$date" ]; then
+                current="$date"
+                echo "## $date" >> timeline.md
+              fi
+              echo "- [$file](./$file)" >> timeline.md
+            done
+          fi
 
       - name: Sync markdown files
         run: |
           rm -rf public/*
+          # 使用 --parents 可以保持子目录结构
           cp -r *.md public/ || true
-          cp -r */ public/ || true
-          rm -rf public/public
+          find . -maxdepth 1 -type d ! -name "public" ! -name "." ! -name ".git" ! -name ".github" -exec cp -r {} public/ \; || true
 
       - name: Commit and push changes (force rebuild)
         run: |
@@ -129,4 +135,3 @@ EOF
           git add .
           git commit -m "Auto sync + index + categories + search + timeline" --allow-empty
           git push
-
