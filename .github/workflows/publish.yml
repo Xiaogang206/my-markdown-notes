@@ -129,3 +129,4 @@ EOF
           git add .
           git commit -m "Auto sync + index + categories + search + timeline" --allow-empty
           git push
+
