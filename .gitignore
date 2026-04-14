@@ -4,6 +4,13 @@
 
 # 忽略整个 .obsidian 文件夹（插件、配置、密钥）
 .obsidian/
+.trash/
+回收站/
+全部笔记.base
+生活private/
+工具箱private/
+sync.sh
+
 
 # 如果你只想同步部分配置，可以手动取消注释下面几行：
 # .obsidian/workspace.json
