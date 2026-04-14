@@ -1,6 +1,7 @@
-# 我的 Markdown 笔记索引
-
-> 自动生成的笔记总目录（按分类整理）
+---
+layout: default
+title: 我的 Markdown 笔记索引
+---
 
 ## 目录
 - [书籍](#书籍)
