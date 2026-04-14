@@ -53,3 +53,7 @@ yarn-error.log*
 .obsidian/plugins/obsidian-image-uploader/
 .obsidian/plugins/obsidian-aliyun-oss/
 
+# ============================
+# macOS 系统文件
+# ============================
+.DS_Store
