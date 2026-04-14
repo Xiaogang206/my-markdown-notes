@@ -3,6 +3,10 @@ layout: default
 title: 我的 Markdown 笔记索引
 ---
 
+# 我的 Markdown 笔记索引
+
+> 自动生成的分类目录（使用 include，不会卡死）
+
 ## 目录
 - [书籍](#书籍)
 - [书籍目录](#书籍目录)
@@ -19,98 +23,34 @@ title: 我的 Markdown 笔记索引
 ---
 
 ## 书籍
-{% for file in site.pages %}
-{% if file.path contains '书籍/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
-
----
+{% include list-folder.html folder="书籍" %}
 
 ## 书籍目录
-{% for file in site.pages %}
-{% if file.path contains '书籍目录/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
-
----
+{% include list-folder.html folder="书籍目录" %}
 
 ## 人物
-{% for file in site.pages %}
-{% if file.path contains '人物/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
-
----
+{% include list-folder.html folder="人物" %}
 
 ## 哲学～大问题
-{% for file in site.pages %}
-{% if file.path contains '哲学～大问题/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
-
----
+{% include list-folder.html folder="哲学～大问题" %}
 
 ## 圆桌讨论
-{% for file in site.pages %}
-{% if file.path contains '圆桌讨论/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
-
----
+{% include list-folder.html folder="圆桌讨论" %}
 
 ## 播客
-{% for file in site.pages %}
-{% if file.path contains '播客/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
-
----
+{% include list-folder.html folder="播客" %}
 
 ## 文学
-{% for file in site.pages %}
-{% if file.path contains '文学/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
-
----
+{% include list-folder.html folder="文学" %}
 
 ## 王志安
-{% for file in site.pages %}
-{% if file.path contains '王志安/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
-
----
+{% include list-folder.html folder="王志安" %}
 
 ## 社科类
-{% for file in site.pages %}
-{% if file.path contains '社科类/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
-
----
+{% include list-folder.html folder="社科类" %}
 
 ## 英语
-{% for file in site.pages %}
-{% if file.path contains '英语/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
-
----
+{% include list-folder.html folder="英语" %}
 
 ## 话题
-{% for file in site.pages %}
-{% if file.path contains '话题/' %}
-- [{{ file.name | replace: '.md', '' }}]({{ file.path }})
-{% endif %}
-{% endfor %}
+{% include list-folder.html folder="话题" %}
