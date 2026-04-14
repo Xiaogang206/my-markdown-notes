@@ -13,28 +13,28 @@ enableToc: false
 
 ## 🕒 最近更新
 
-```Dataview
-TABLE file.mtime AS "更新时间"
-FROM ""
-SORT file.mtime DESC
-LIMIT 10
-```
+<RecentNotes limit={10} />
 
-```Dataview
-LIST
-FROM ""
-GROUP BY file.folder
-```
+---
 
-```Dataview
-LIST
-FROM ""
-WHERE file.tags
-GROUP BY file.tags
-```
+## 📚 分类导航
 
-```Dataview
-TABLE file.link AS "文档", file.folder AS "分类", file.mtime AS "更新时间"
-FROM ""
-SORT file.name ASC
-```
+<FolderList />
+
+---
+
+## 🏷️ 标签云
+
+<TagList />
+
+---
+
+## 🧠 知识图谱
+
+你可以点击左侧导航栏的 **Graph** 查看全局知识网络。
+
+---
+
+## 📂 全部内容
+
+<AllNotes />
