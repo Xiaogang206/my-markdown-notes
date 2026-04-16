@@ -1,0 +1,242 @@
+
+<style>
+  .page { max-width: 680px; padding: 1.5rem 1rem; font-family: var(--font-sans); }
+  .section { margin-bottom: 2rem; }
+  .title-badge { display: inline-block; background: #EEEDFE; color: #3C3489; font-size: 13px; font-weight: 500; padding: 4px 12px; border-radius: 20px; margin-bottom: 8px; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .big-num { font-size: 36px; font-weight: 500; color: #534AB7; line-height: 1; }
+  .sub { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .row .card { flex: 1; min-width: 140px; }
+  .slider-row { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
+  .slider-row label { font-size: 14px; color: var(--color-text-secondary); min-width: 40px; }
+  .val { font-size: 15px; font-weight: 500; min-width: 80px; }
+  .tip { background: #E1F5EE; border-radius: 8px; padding: 10px 14px; font-size: 14px; color: #085041; margin-top: 8px; }
+  .emoji-big { font-size: 28px; line-height: 1.2; }
+  .quiz-btn { border: 0.5px solid var(--color-border-secondary); border-radius: 8px; padding: 8px 16px; font-size: 14px; cursor: pointer; background: var(--color-background-primary); color: var(--color-text-primary); margin: 4px; transition: background 0.15s; }
+  .quiz-btn:hover { background: var(--color-background-secondary); }
+  .quiz-btn.correct { background: #E1F5EE; border-color: #1D9E75; color: #085041; }
+  .quiz-btn.wrong { background: #FCEBEB; border-color: #E24B4A; color: #791F1F; }
+  .result-msg { font-size: 14px; margin-top: 8px; min-height: 20px; font-weight: 500; }
+  h2 { font-size: 18px; font-weight: 500; margin: 0 0 12px; }
+  h3 { font-size: 15px; font-weight: 500; margin: 0 0 6px; }
+  p { font-size: 15px; line-height: 1.7; margin: 0 0 8px; }
+</style>
+
+<div class="page">
+  <h2 style="color: var(--color-text-primary);">🌀 弧度 vs 角度 — 小学生图解教程</h2>
+
+  <!-- Section 1: What is angle -->
+  <div class="section">
+    <div class="title-badge">第一步：先回忆角度</div>
+    <p>我们已经知道，<strong>角度</strong>是用来量"转了多大"的单位。一圈 = <strong>360°</strong>。</p>
+    <div class="row">
+      <div class="card" style="text-align:center;">
+        <div class="emoji-big">↩</div>
+        <div class="big-num">90°</div>
+        <div class="sub">四分之一圈（直角）</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="emoji-big">↩↩</div>
+        <div class="big-num">180°</div>
+        <div class="sub">半圈（直线）</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="emoji-big">🔄</div>
+        <div class="big-num">360°</div>
+        <div class="sub">整整一圈</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Radian idea -->
+  <div class="section">
+    <div class="title-badge">第二步：弧度是什么？</div>
+    <p><strong>弧度</strong>用圆的"弧长"来量角。想象一条绳子贴着圆圈走……</p>
+    <div class="card" style="text-align:center; padding: 1rem;">
+      <svg width="100%" viewBox="0 0 320 200" role="img">
+        <title>弧度示意图</title>
+        <!-- circle -->
+        <circle cx="160" cy="110" r="70" fill="none" stroke="#AFA9EC" stroke-width="1.5"/>
+        <!-- radius lines -->
+        <line x1="160" y1="110" x2="230" y2="110" stroke="#534AB7" stroke-width="2"/>
+        <line x1="160" y1="110" x2="217" y2="68" stroke="#534AB7" stroke-width="2"/>
+        <!-- arc highlight (about 1 radian arc) -->
+        <path d="M 230 110 A 70 70 0 0 0 217 68" fill="none" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/>
+        <!-- R label -->
+        <text x="192" y="128" font-size="13" fill="#534AB7" text-anchor="middle" font-family="var(--font-sans)">半径 r</text>
+        <!-- arc = r label -->
+        <text x="245" y="88" font-size="13" fill="#1D9E75" text-anchor="start" font-family="var(--font-sans)">弧长 = r</text>
+        <!-- angle mark -->
+        <path d="M 182 110 A 22 22 0 0 0 172 93" fill="none" stroke="#E24B4A" stroke-width="1.5"/>
+        <text x="192" y="100" font-size="13" fill="#E24B4A" text-anchor="middle" font-family="var(--font-sans)">1 弧度</text>
+      </svg>
+      <div class="tip">当弧长 = 半径时，这个角就是 <strong>1 弧度</strong>！</div>
+    </div>
+  </div>
+
+  <!-- Section 3: interactive -->
+  <div class="section">
+    <div class="title-badge">第三步：动手试试！</div>
+    <p>拖动滑块，看角度和弧度如何变化：</p>
+    <div class="card">
+      <canvas id="circleCanvas" width="260" height="200" style="display:block;margin:0 auto;"></canvas>
+      <div class="slider-row">
+        <label>角度</label>
+        <input type="range" min="0" max="360" value="57" id="degSlider" step="1" style="flex:1;"/>
+        <span class="val" id="degVal">57°</span>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <div class="card" style="text-align:center; background: #EEEDFE; border:none;">
+          <div style="font-size:12px; color:#534AB7;">角度</div>
+          <div style="font-size:22px; font-weight:500; color:#3C3489;" id="degDisp">57°</div>
+        </div>
+        <div class="card" style="text-align:center; background: #E1F5EE; border:none;">
+          <div style="font-size:12px; color:#0F6E56;">弧度（rad）</div>
+          <div style="font-size:22px; font-weight:500; color:#085041;" id="radDisp">1.00 rad</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: key facts -->
+  <div class="section">
+    <div class="title-badge">第四步：记住这些！</div>
+    <div class="row">
+      <div class="card">
+        <h3>🔁 一整圈</h3>
+        <p style="font-size:14px;">360° = <strong style="color:#534AB7;">2π 弧度</strong><br>（约 6.28 rad）</p>
+      </div>
+      <div class="card">
+        <h3>📐 直角</h3>
+        <p style="font-size:14px;">90° = <strong style="color:#534AB7;">π/2 弧度</strong><br>（约 1.57 rad）</p>
+      </div>
+      <div class="card">
+        <h3>➡ 直线</h3>
+        <p style="font-size:14px;">180° = <strong style="color:#534AB7;">π 弧度</strong><br>（约 3.14 rad）</p>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:4px;">
+      <strong>换算口诀：</strong> 角度 × π ÷ 180 = 弧度 &nbsp;|&nbsp; 弧度 × 180 ÷ π = 角度
+    </div>
+  </div>
+
+  <!-- Section 5: quiz -->
+  <div class="section">
+    <div class="title-badge">小测验</div>
+    <div class="card" id="quizArea">
+      <h3 id="qText">180° 等于几弧度？</h3>
+      <div id="qBtns">
+        <button class="quiz-btn" onclick="answer(this, false)">2π</button>
+        <button class="quiz-btn" onclick="answer(this, true)">π</button>
+        <button class="quiz-btn" onclick="answer(this, false)">π/2</button>
+        <button class="quiz-btn" onclick="answer(this, false)">1</button>
+      </div>
+      <div class="result-msg" id="resultMsg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('circleCanvas');
+const ctx = canvas.getContext('2d');
+const degSlider = document.getElementById('degSlider');
+const degVal = document.getElementById('degVal');
+const degDisp = document.getElementById('degDisp');
+const radDisp = document.getElementById('radDisp');
+
+function drawCircle(deg) {
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, r = 72;
+  ctx.clearRect(0, 0, W, H);
+
+  // detect dark mode
+  const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const circleSt = isDark ? '#AFA9EC' : '#AFA9EC';
+  const textCol = isDark ? '#e0dff8' : '#3C3489';
+  const arcCol = '#1D9E75';
+  const radCol = '#534AB7';
+
+  // circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, 2*Math.PI);
+  ctx.strokeStyle = circleSt;
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  const rad = deg * Math.PI / 180;
+
+  // arc sector
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + rad);
+  ctx.closePath();
+  ctx.fillStyle = isDark ? 'rgba(94,185,141,0.18)' : 'rgba(29,158,117,0.12)';
+  ctx.fill();
+
+  // arc line
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + rad);
+  ctx.strokeStyle = arcCol;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // radius 1 (right / 0 angle)
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx, cy - r);
+  ctx.strokeStyle = radCol;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // radius 2 (to angle)
+  const ex = cx + r * Math.sin(rad);
+  const ey = cy - r * Math.cos(rad);
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(ex, ey);
+  ctx.strokeStyle = radCol;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // angle label
+  ctx.font = '500 13px var(--font-sans, sans-serif)';
+  ctx.fillStyle = textCol;
+  ctx.textAlign = 'center';
+  const midRad = rad / 2;
+  const lx = cx + 30 * Math.sin(midRad);
+  const ly = cy - 30 * Math.cos(midRad);
+  ctx.fillText(deg + '°', lx, ly + 4);
+}
+
+function update() {
+  const d = parseInt(degSlider.value);
+  degVal.textContent = d + '°';
+  degDisp.textContent = d + '°';
+  const r = (d * Math.PI / 180);
+  radDisp.textContent = r.toFixed(2) + ' rad';
+  drawCircle(d);
+}
+
+degSlider.addEventListener('input', update);
+update();
+
+function answer(btn, correct) {
+  const btns = document.querySelectorAll('.quiz-btn');
+  btns.forEach(b => b.disabled = true);
+  const msg = document.getElementById('resultMsg');
+  if (correct) {
+    btn.className = 'quiz-btn correct';
+    msg.style.color = '#085041';
+    msg.textContent = '✓ 答对了！180° 正好等于 π 弧度（约 3.14 rad）';
+  } else {
+    btn.className = 'quiz-btn wrong';
+    msg.style.color = '#791F1F';
+    msg.textContent = '✗ 再想想！提示：一圈是 2π，半圈就是…';
+    setTimeout(() => {
+      btns.forEach(b => { b.disabled = false; b.className = 'quiz-btn'; });
+      msg.textContent = '';
+    }, 2000);
+  }
+}
+</script>
